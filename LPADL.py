@@ -242,11 +242,11 @@ def coden(seq):
         vectors[i][coden_dict[seq[i:i+3].replace('T', 'U')]] = 1
     return vectors.tolist()
 
-def prepare_RPI450_feature(deepmind = False, seperate=False):
-    print 'RPI450 dataset'
+def prepare_RPI_feature(deepmind = False, seperate=False):
+    print 'RPI dataset'
     lncRNA = pd.read_csv("zma_lncRNA.csv")
     protein = pd.read_csv("zma_rbp.csv")
-    interaction = pd.read_fwf("ath_interaction.txt") #fwf stands for fixed width formatted lines
+    interaction = pd.read_fwf("athinteraction.txt") #fwf stands for fixed width formatted lines
     
     interaction_pair = {}
     RNA_seq_dict = {}
@@ -392,7 +392,7 @@ def plot_auprc_curve(labels, probality, legend_text, auprc_tag = True):
 
 def LSTM_model():
         #timesteps = 1
-        data_dim = 120
+        data_dim = 150
         timesteps = 1
         batch_size = 64        
 	print 'LPA_DL'	
@@ -408,7 +408,7 @@ def LSTM_model():
               metrics=['accuracy'])
 	return model
 
-def DeepPLRPIM(dataset = 'RPI450'):
+def LPI(dataset = 'RPI'):
     data_dim = 620
     timesteps = 1
     batch_size = 64  
@@ -479,7 +479,7 @@ def DeepPLRPIM(dataset = 'RPI450'):
 
 	svc = OneVsRestClassifier(SVC(kernel="linear", random_state=123, probability=True), n_jobs=-1) #, C=1
 	#svc=SVC(kernel='poly',degree=2,gamma=1,coef0=0)
-    	rfe = RFE(estimator=svc, n_features_to_select=120, step=1)
+    	rfe = RFE(estimator=svc, n_features_to_select=150, step=1)
 	rfe.fit(train, train_label_new)
 	train2 = rfe.transform(train)
 	test2 = rfe.transform(test)
@@ -502,7 +502,7 @@ def DeepPLRPIM(dataset = 'RPI450'):
 	print '---' * 50 
 
 	model = Sequential()
-        model.add(LSTM(68, return_sequences=False,input_shape=(timesteps, data_dim), name='lstm1'))  #kernel_regularizer=regularizers.l2(0.0001),# returns a sequence of vectors of dimension 32
+        model.add(LSTM(64, return_sequences=False,input_shape=(timesteps, data_dim), name='lstm1'))  #kernel_regularizer=regularizers.l2(0.0001),# returns a sequence of vectors of dimension 32
         model.add(Dropout(0.25, name='dropout'))
         #model.add(Dense(2, name='full_connect'))
 	model.add(DropConnect(Dense(2, activation='relu', kernel_regularizer=regularizers.l2(0.0001), bias_regularizer=regularizers.l2(0.0001)), prob=0.25, name='full_connect'))
@@ -547,8 +547,8 @@ def DeepPLRPIM(dataset = 'RPI450'):
     print '---' * 50 
     
     Figure = plt.figure()
-    plot_roc_curve(all_labels, all_prob[0], 'Proposed Method_WFS')
-    plot_roc_curve(all_labels, all_prob[1], 'Proposed Method_NFS')
+    plot_roc_curve(all_labels, all_prob[0], 'LPI_WFS')
+    plot_roc_curve(all_labels, all_prob[1], 'LPI_NFS')
     plt.plot([0, 1], [0, 1], 'k--')
     plt.xlim([-0.05, 1.05])
     plt.ylim([0, 1.05])
@@ -563,4 +563,4 @@ def transfer_label_from_prob(proba):
     return label
 
 if __name__=="__main__":
-    DeepPLRPIM()
+    LPI()
