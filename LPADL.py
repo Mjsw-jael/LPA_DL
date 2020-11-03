@@ -191,25 +191,6 @@ def TransDict_from_list(groups):
         index = index + 1
     return result
 
-def get_blend_data(j, clf, skf, X_test, X_dev, Y_dev, blend_train, blend_test):
-        print 'Training classifier [%s]' % (j)
-        blend_test_j = np.zeros((X_test.shape[0], len(skf))) # Number of testing data x Number of folds , we will take the mean of the predictions later
-        for i, (train_index, cv_index) in enumerate(skf):
-            print 'Fold [%s]' % (i)
-            
-            # This is the training and validation set
-            X_train = X_dev[train_index]
-            Y_train = Y_dev[train_index]
-            X_cv = X_dev[cv_index]
-            Y_cv = Y_dev[cv_index]
-            
-            clf.fit(X_train, Y_train)
-            blend_train[cv_index, j] = clf.predict_proba(X_cv)[:,1]
-            blend_test_j[:, i] = clf.predict_proba(X_test)[:,1]
-        # Take the mean of the predictions of the cross validation set
-        blend_test[:, j] = blend_test_j.mean(1)    
-        print 'Y_dev.shape = %s' % (Y_dev.shape)
-
 coden_dict = {'GCU': 0, 'GCC': 0, 'GCA': 0, 'GCG': 0,                             # alanine<A>
               'UGU': 1, 'UGC': 1,                                                 # systeine<C>
               'GAU': 2, 'GAC': 2,                                                 # aspartic acid<D>
