@@ -372,22 +372,21 @@ def plot_auprc_curve(labels, probality, legend_text, auprc_tag = True):
         rects1 = plt.plot(recall, precision1, label=legend_text )
 
 def LSTM_model():
-        #timesteps = 1
-        data_dim = 150
-        timesteps = 1
-        batch_size = 64        
-	print 'LPA_DL'	
-	model = Sequential()        
-        model.add(LSTM(64, return_sequences=False,input_shape=(timesteps, data_dim), name='lstm1'))  
-	model.add(DropConnect(Dense(2, activation='relu'), prob=0.25, name='full_connect'))
-        model.add(Activation('sigmoid'))
-        model.summary()
-
-        print('Compiling the Model...')
-        model.compile(loss='mean_squared_error', #'mean_squared_error',  #huber
+    #timesteps = 1
+    data_dim = 200
+    timesteps = 1
+    batch_size = 64        
+    print 'LPA_DL'	
+    model = Sequential()        
+    model.add(LSTM(64, return_sequences=False,input_shape=(timesteps, data_dim), name='lstm1'))  
+    model.add(DropConnect(Dense(2, activation='relu'), prob=0.25, name='full_connect'))
+    model.add(Activation('sigmoid'))
+    model.summary()
+    print('Compiling the Model...')
+    model.compile(loss='mean_squared_error', #'mean_squared_error',  #huber
               optimizer='adam',
               metrics=['accuracy'])
-	return model
+    return model
 
 def LPI(dataset = 'RPI'):
     data_dim = 620
@@ -460,7 +459,7 @@ def LPI(dataset = 'RPI'):
 
 	svc = OneVsRestClassifier(SVC(kernel="linear", random_state=123, probability=True), n_jobs=-1) #, C=1
 	#svc=SVC(kernel='poly',degree=2,gamma=1,coef0=0)
-    	rfe = RFE(estimator=svc, n_features_to_select=150, step=1)
+    	rfe = RFE(estimator=svc, n_features_to_select=200, step=1)
 	rfe.fit(train, train_label_new)
 	train2 = rfe.transform(train)
 	test2 = rfe.transform(test)
