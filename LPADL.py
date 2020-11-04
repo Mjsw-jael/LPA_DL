@@ -214,7 +214,7 @@ coden_dict = {'GCU': 0, 'GCC': 0, 'GCA': 0, 'GCG': 0,                           
               'UAA': 20, 'UAG': 20, 'UGA': 20,                                    # STOP code
               }
 
-# the amino acid code adapting 21-dimensional vector (20 amino acid and 1 STOP code)
+# The 21-dimensional vector (20 amino acid and 1 STOP code)
 
 
 def coden(seq):
