@@ -1,2 +1,2 @@
-# LPA_DL
+# LPI-DL
 LSTM with feature optimization for lncRNA-protein interaction
